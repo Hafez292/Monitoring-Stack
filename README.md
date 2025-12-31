@@ -283,8 +283,7 @@ Contributions welcome! Please submit a Pull Request.
 
 ## 📄 License
 
-[Specify your license here]
+[Hafez292@NTI_CTI_Carrer_Lanuch Project]
 
 ---
 
-**Made with ❤️ for monitoring infrastructure**
