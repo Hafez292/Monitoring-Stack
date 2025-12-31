@@ -7,7 +7,7 @@ Automated deployment of Prometheus, Grafana, Alertmanager, and Node Exporter usi
 ### Step 1: Clone and Setup
 
 ```bash
-git clone https://github.com/yourusername/monitoring-stack.git
+git clone https://github.com/Hafez292/Monitoring-Stack.git
 cd monitoring-stack
 chmod +x setup.sh
 ./setup.sh
