@@ -1,0 +1,17 @@
+- name: Test Ansible Connectivity and Basic Operations
+  hosts: monitoring
+  gather_facts: yes
+  
+  tasks:
+    # Task 1: Check if we can reach the host
+    - name: Test raw connection
+      raw: echo "Hello from {{ inventory_hostname }}"
+      register: raw_test
+      changed_when: false
+    
+    - name: Display raw connection result
+      debug:
+        msg: "Raw connection successful: {{ raw_test.stdout }}"
+    - name: Get specific interface IP (eth0/ens192/etc)
+      debug:
+        msg: "eth0 IP: {{ ansible_facts.eth0.ipv4.address | default('Not found') }}"

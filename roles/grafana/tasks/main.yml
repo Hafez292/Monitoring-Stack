@@ -1,0 +1,58 @@
+- name: Create Grafana data directory
+  file:
+    path: /opt/grafana
+    state: directory
+    owner: 472
+    group: 472
+    mode: '0755'
+
+- name: Create Grafana provisioning directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 472
+    group: 472
+    mode: '0755'
+  loop:
+    - /opt/grafana/provisioning
+    - /opt/grafana/provisioning/datasources
+    - /opt/grafana/provisioning/dashboards
+    - /opt/grafana/dashboards
+
+- name: Deploy Prometheus datasource configuration
+  copy:
+    src: datasources/prometheus.yml
+    dest: /opt/grafana/provisioning/datasources/prometheus.yml
+    owner: 472
+    group: 472
+    mode: '0644'
+
+- name: Deploy dashboard provider configuration
+  copy:
+    src: dashboards/dashboard-provider.yml
+    dest: /opt/grafana/provisioning/dashboards/dashboard-provider.yml
+    owner: 472
+    group: 472
+    mode: '0644'
+
+- name: Deploy Node Exporter dashboard
+  copy:
+    src: dashboards/node-exporter-full.json
+    dest: /opt/grafana/dashboards/node-exporter-full.json
+    owner: 472
+    group: 472
+    mode: '0644'
+
+- name: Run Grafana container
+  containers.podman.podman_container:
+    name: grafana
+    image: grafana/grafana:latest
+    state: started
+    restart_policy: always
+    network:
+      - "{{ monitoring_network_name | default('monitoring-net') }}"
+    ports:
+      - "3000:3000"
+    volume:
+      - "/opt/grafana:/var/lib/grafana:Z"
+      - "/opt/grafana/provisioning:/etc/grafana/provisioning:Z"

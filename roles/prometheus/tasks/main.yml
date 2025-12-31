@@ -1,0 +1,28 @@
+- name: Create Prometheus directories
+  file:
+    path: /opt/prometheus
+    state: directory
+
+- name: Deploy Prometheus config
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/prometheus/prometheus.yml
+
+- name: Deploy alert rules
+  copy:
+    src: alert_rules.yml
+    dest: /opt/prometheus/alert_rules.yml
+
+- name: Run Prometheus container
+  containers.podman.podman_container:
+    name: prometheus
+    image: prom/prometheus:latest
+    state: started
+    restart_policy: always
+    network:
+      - "{{ monitoring_network_name | default('monitoring-net') }}"
+    ports:
+      - "9090:9090"
+    volume:
+      - "/opt/prometheus:/etc/prometheus"
+

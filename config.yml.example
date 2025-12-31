@@ -1,0 +1,74 @@
+# Monitoring Stack Configuration Template
+# Copy this file to config.yml and customize it for your environment
+
+# Ansible Configuration
+ansible:
+  remote_user: ansible          # SSH user for remote hosts
+  become_user: root             # User to become with sudo
+  ask_become_pass: false        # Set to true if sudo requires password
+
+# Inventory Configuration
+inventory:
+  monitoring_hosts:
+    - name: monitoring-server
+      ansible_host: 192.168.1.10  # IP address or hostname
+      # ansible_host: monitoring.example.com  # Alternative: use hostname
+  
+  node_hosts:
+    - name: node-1
+      ansible_host: 192.168.1.11
+    - name: node-2
+      ansible_host: 192.168.1.12
+    # Add more nodes as needed
+
+# Prometheus Configuration
+prometheus:
+  port: 9090
+  scrape_interval: 15s          # How often to scrape metrics
+  data_dir: /opt/prometheus
+
+# Grafana Configuration
+grafana:
+  port: 3000
+  admin_user: admin
+  admin_password: admin         # Change on first login
+  data_dir: /opt/grafana
+
+# Alertmanager Configuration
+alertmanager:
+  port: 9093
+  data_dir: /opt/alertmanager
+  email:
+    enabled: true
+    to: your-email@example.com
+    from: alertmanager@example.com
+    smarthost: smtp.gmail.com:587  # SMTP server
+    auth_username: your-email@gmail.com
+    auth_password: your-app-password  # Use app password for Gmail
+    # For Gmail, use App Password: https://support.google.com/accounts/answer/185833
+  # Alternative: Slack configuration
+  # slack:
+  #   enabled: true
+  #   webhook_url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+  #   channel: "#alerts"
+
+# Node Exporter Configuration
+node_exporter:
+  port: 9100
+
+# Container Configuration
+containers:
+  restart_policy: always
+  image_registry: ""            # Leave empty for default (Docker Hub, Quay.io)
+  # image_registry: registry.example.com  # Custom registry if needed
+  network_name: monitoring-net  # Podman network name for container communication
+
+# Network Configuration
+network:
+  # Firewall ports that need to be opened
+  ports:
+    - 9090  # Prometheus
+    - 3000  # Grafana
+    - 9093  # Alertmanager
+    - 9100  # Node Exporter
+

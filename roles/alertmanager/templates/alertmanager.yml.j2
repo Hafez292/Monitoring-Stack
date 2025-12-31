@@ -1,0 +1,16 @@
+route:
+  receiver: "default"
+
+receivers:
+  - name: "default"
+    email_configs:
+      - to: "{{ alertmanager_email_to | default('alerts@example.com') }}"
+        from: "{{ alertmanager_email_from | default('alertmanager@example.com') }}"
+        smarthost: "{{ alertmanager_email_smarthost | default('smtp.example.com:25') }}"
+{% if alertmanager_email_username is defined and alertmanager_email_username %}
+        auth_username: "{{ alertmanager_email_username }}"
+{% endif %}
+{% if alertmanager_email_password is defined and alertmanager_email_password %}
+        auth_password: "{{ alertmanager_email_password }}"
+{% endif %}
+

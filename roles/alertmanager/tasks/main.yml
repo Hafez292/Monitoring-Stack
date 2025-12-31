@@ -1,0 +1,23 @@
+- name: Create Alertmanager directory
+  file:
+    path: /opt/alertmanager
+    state: directory
+
+- name: Deploy Alertmanager config
+  template:
+    src: alertmanager.yml.j2
+    dest: /opt/alertmanager/alertmanager.yml
+
+- name: Run Alertmanager container
+  containers.podman.podman_container:
+    name: alertmanager
+    image: prom/alertmanager:latest
+    state: started
+    restart_policy: always
+    network:
+      - "{{ monitoring_network_name | default('monitoring-net') }}"
+    ports:
+      - "9093:9093"
+    volume:
+      - "/opt/alertmanager:/etc/alertmanager"
+

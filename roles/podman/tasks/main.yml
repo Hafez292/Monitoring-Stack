@@ -1,0 +1,14 @@
+- name: Install Podman
+  package:
+    name: podman
+    state: present
+
+- name: Enable lingering (rootless containers)
+  command: loginctl enable-linger {{ ansible_user }}
+  ignore_errors: true
+
+- name: Create monitoring network
+  containers.podman.podman_network:
+    name: "{{ monitoring_network_name | default('monitoring-net') }}"
+    state: present
+

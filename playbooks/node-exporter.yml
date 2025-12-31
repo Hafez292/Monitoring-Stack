@@ -1,0 +1,10 @@
+- name: Deploy Node Exporter on all nodes
+  hosts: nodes
+  become: true
+  collections:
+    - containers.podman
+
+  roles:
+    - podman
+    - node_exporter
+

@@ -1,0 +1,15 @@
+ansible-navigator:
+  execution-environment:
+    enabled: true
+    container-engine: podman
+    image: registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8
+    pull:
+      policy: missing
+    container-options:
+      - "-v"
+      - "/home/mhafez/.ansible/collections:/usr/share/ansible/collections:z"
+      - "-v"
+      - "/run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock:z"
+
+  playbook-artifact:
+    enable: false
