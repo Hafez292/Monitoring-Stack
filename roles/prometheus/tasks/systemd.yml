@@ -1,0 +1,25 @@
+- name: Generate systemd service for Prometheus container
+  command: >
+    podman generate systemd
+    --name prometheus
+    --files
+    --new
+  args:
+    chdir: /etc/systemd/system
+  register: prometheus_systemd
+  changed_when: "'container-prometheus.service' in prometheus_systemd.stdout"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable Prometheus container at boot
+  systemd:
+    name: container-prometheus
+    enabled: yes
+
+- name: Start Prometheus container
+  systemd:
+    name: container-prometheus
+    state: started
+

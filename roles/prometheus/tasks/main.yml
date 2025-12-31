@@ -26,3 +26,5 @@
     volume:
       - "/opt/prometheus:/etc/prometheus"
 
+- import_tasks: systemd.yml
+

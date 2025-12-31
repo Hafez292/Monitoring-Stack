@@ -21,3 +21,5 @@
     volume:
       - "/opt/alertmanager:/etc/alertmanager"
 
+- import_tasks: systemd.yml
+

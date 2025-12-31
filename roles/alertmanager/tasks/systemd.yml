@@ -1,0 +1,25 @@
+- name: Generate systemd service for Alertmanager container
+  command: >
+    podman generate systemd
+    --name alertmanager
+    --files
+    --new
+  args:
+    chdir: /etc/systemd/system
+  register: alertmanager_systemd
+  changed_when: "'container-alertmanager.service' in alertmanager_systemd.stdout"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable Alertmanager container at boot
+  systemd:
+    name: container-alertmanager
+    enabled: yes
+
+- name: Start Alertmanager container
+  systemd:
+    name: container-alertmanager
+    state: started
+

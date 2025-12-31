@@ -56,3 +56,5 @@
     volume:
       - "/opt/grafana:/var/lib/grafana:Z"
       - "/opt/grafana/provisioning:/etc/grafana/provisioning:Z"
+
+- import_tasks: systemd.yml

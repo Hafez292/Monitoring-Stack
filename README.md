@@ -160,6 +160,7 @@ All containers run on a shared Podman network (`monitoring-net`) for easy commun
 - ✅ **Fully Automated**: Setup script generates all configuration
 - ✅ **Auto-provisioned Grafana**: Dashboards and datasources configured automatically
 - ✅ **Container Network**: All services communicate via Podman network
+- ✅ **Auto-start on Reboot**: All containers automatically restart after server reboot
 - ✅ **Customizable**: Easy configuration via `config.yml`
 - ✅ **Production Ready**: Includes alerting and monitoring
 
@@ -200,6 +201,51 @@ ssh user@monitoring-server 'podman ps'
 # Test services
 curl http://monitoring-server:9090  # Prometheus
 curl http://monitoring-server:3000  # Grafana
+```
+
+## 🔄 Auto-Start on Reboot
+
+All containers are configured to automatically start on server reboot using systemd services:
+
+- ✅ Systemd services are automatically generated and enabled
+- ✅ Containers start automatically when the server boots
+- ✅ Containers automatically restart if they crash
+- ✅ No manual intervention needed after deployment
+
+**How it works:**
+- Each container gets a systemd service file in `/etc/systemd/system/`
+- Services are enabled to start on boot
+- Uses system-level systemd (requires `become: true`)
+
+**Verify auto-start:**
+```bash
+# Check services are enabled
+systemctl list-unit-files | grep container-
+
+# Check service status
+systemctl status container-prometheus.service
+systemctl status container-grafana.service
+
+# Test: Reboot server and verify containers start
+sudo reboot
+# After reboot, check:
+podman ps
+systemctl status container-prometheus.service
+```
+
+**Manual service management:**
+```bash
+# Start a service
+sudo systemctl start container-prometheus.service
+
+# Stop a service
+sudo systemctl stop container-prometheus.service
+
+# Restart a service
+sudo systemctl restart container-prometheus.service
+
+# View service logs
+sudo journalctl -u container-prometheus.service -f
 ```
 
 ## 🐛 Troubleshooting

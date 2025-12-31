@@ -1,0 +1,25 @@
+- name: Generate systemd service for Node Exporter container
+  command: >
+    podman generate systemd
+    --name node_exporter
+    --files
+    --new
+  args:
+    chdir: /etc/systemd/system
+  register: node_exporter_systemd
+  changed_when: "'container-node_exporter.service' in node_exporter_systemd.stdout"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable Node Exporter container at boot
+  systemd:
+    name: container-node_exporter
+    enabled: yes
+
+- name: Start Node Exporter container
+  systemd:
+    name: container-node_exporter
+    state: started
+

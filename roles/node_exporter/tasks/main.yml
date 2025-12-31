@@ -11,3 +11,5 @@
     volume:
       - "/:/host:ro,rslave"
 
+- import_tasks: systemd.yml
+

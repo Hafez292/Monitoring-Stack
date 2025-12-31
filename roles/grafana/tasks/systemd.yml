@@ -1,0 +1,25 @@
+- name: Generate systemd service for Grafana container
+  command: >
+    podman generate systemd
+    --name grafana
+    --files
+    --new
+  args:
+    chdir: /etc/systemd/system
+  register: grafana_systemd
+  changed_when: "'container-grafana.service' in grafana_systemd.stdout"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable Grafana container at boot
+  systemd:
+    name: container-grafana
+    enabled: yes
+
+- name: Start Grafana container
+  systemd:
+    name: container-grafana
+    state: started
+
